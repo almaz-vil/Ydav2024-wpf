@@ -1,0 +1,47 @@
+﻿<Window x:Class="Ydav2024_wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ydav2024_wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="250" Width="800">
+    <DockPanel>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Name="StatusBar" />
+            </StatusBarItem>
+        </StatusBar>
+        <TabControl>
+            <TabItem Header="Сигнал и батарейка">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="1" Grid.Column="1" Content="Сигнал"/>
+                    <Label Grid.Row="1" Grid.Column="2" Content="Сигнал"/>
+                    <Label Grid.Row="2" Grid.Column="1" Content="Сигнал"/>
+                    <TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Name="IpAddress">192.168.1.91</TextBox>
+                    <Button Grid.Row="4" Grid.Column="4" Content="Соединение" Click="Button_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Входящий звонок">Вторая вкладка</TabItem>
+            <TabItem Header="Лог">
+                <ScrollViewer>
+                    <TextBlock TextWrapping="Wrap" Name="Log"/>
+                </ScrollViewer>
+            </TabItem>
+            <StackPanel Height="100" Width="100" VerticalAlignment="Bottom"/>
+        </TabControl>
+    </DockPanel>
+    
+
+</Window>
