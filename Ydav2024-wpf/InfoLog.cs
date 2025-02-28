@@ -9,7 +9,7 @@ using System.Net.Sockets;
 
 namespace Ydav2024_wpf
 {
-  
+
     [Serializable]
     public class Signal
     {
@@ -55,7 +55,7 @@ namespace Ydav2024_wpf
         public uint Sms { get; set; }
         [JsonPropertyName("phone")]
         public uint Phone { get; set; }
-        public static (Phones, String) Connect(String adress, CommandSend commandSend, String param )
+        public static (Phones, String) Connect(String adress, CommandSend commandSend, String param)
         {
             var sendCommand = new SendCommand();
             var sSend = sendCommand.Command(commandSend);
@@ -77,10 +77,10 @@ namespace Ydav2024_wpf
 
             var responseData = new byte[512];
             var message = new StringBuilder();
-            int bytes; 
+            int bytes;
             do
             {
-                bytes = stream.Read(responseData,0,512);
+                bytes = stream.Read(responseData, 0, 512);
                 message.Append(Encoding.UTF8.GetString(responseData, 0, bytes));
             }
             while (bytes > 0); // пока данные есть в потоке 
@@ -96,7 +96,7 @@ namespace Ydav2024_wpf
             {
                 tcpClient.Close();
                 var error = $"Ошибка: {e.Message}!\n {message}";
-                
+
                 return (null, error);
             }
         }

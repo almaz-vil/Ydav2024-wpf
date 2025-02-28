@@ -41,8 +41,17 @@ namespace Ydav2024_wpf
         
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var infoLog = InfoLog.Connect(IpAddress.Text);
-            Log.Text = infoLog.Json;
+            var info = InfoLog.Connect(IpAddress.Text);
+            InfoLogT infoLog = (InfoLogT)this.Resources["infoLog"];
+            PhonesT phoneLog = (PhonesT)this.Resources["phoneLog"];
+            BatteryT batteryLog = (BatteryT)this.Resources["batteryLog"];
+            infoLog.Json =info.Json;
+            phoneLog.Time = info.Info.Time;
+            phoneLog.Sms = info.Info.Sms;
+            batteryLog.Level = info.Info.Battery.Level;
+            batteryLog.Status = info.Info.Battery.Status;
+            batteryLog.Temperature = info.Info.Battery.Temperature;
+            batteryLog.Charge = info.Info.Battery.Charge;
         }
     }
 }

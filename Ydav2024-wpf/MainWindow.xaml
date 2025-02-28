@@ -6,10 +6,23 @@
         xmlns:local="clr-namespace:Ydav2024_wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="250" Width="800">
+    <Window.Resources>
+        <local:InfoLogT x:Key="infoLog" Json="0"/>
+        <local:BatteryT x:Key="batteryLog"/>
+        <local:PhonesT x:Key="phoneLog"/>
+        <local:SignalT x:Key="signalLog"/>
+    </Window.Resources>
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Name="StatusBar" />
+                <TextBlock Text="{Binding Source={StaticResource phoneLog},
+                        Path=Time,
+                        Mode=TwoWay}" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding StringFormat=Входящих СМС {0}, Source={StaticResource phoneLog},
+                        Path=Sms,
+                        Mode=TwoWay}" />
             </StatusBarItem>
         </StatusBar>
         <TabControl>
@@ -19,24 +32,42 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Row="1" Grid.Column="1" Content="Сигнал"/>
-                    <Label Grid.Row="1" Grid.Column="2" Content="Сигнал"/>
+                    <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+
+                        <TextBlock  Text="{Binding StringFormat=Батарейка: {0}, Source={StaticResource batteryLog},
+                        Path=Level,
+                        Mode=TwoWay}" >
+                        </TextBlock>
+                        <TextBlock  Text="{Binding StringFormat=t: {0} , Source={StaticResource batteryLog},
+                        Path=Temperature,
+                        Mode=TwoWay}" >
+                        </TextBlock>
+                        <TextBlock  Text="{Binding StringFormat=Status: {0} , Source={StaticResource batteryLog},
+                        Path=Status,
+                        Mode=TwoWay}" >
+                        </TextBlock>
+                        <TextBlock  Text="{Binding StringFormat=j: {0}, Source={StaticResource batteryLog},
+                        Path=Charge,
+                        Mode=TwoWay}" >
+                        </TextBlock>
+                    </DockPanel>
+
                     <Label Grid.Row="2" Grid.Column="1" Content="Сигнал"/>
-                    <TextBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Name="IpAddress">192.168.1.91</TextBox>
-                    <Button Grid.Row="4" Grid.Column="4" Content="Соединение" Click="Button_Click"/>
+                    <TextBox Grid.Row="0" Grid.Column="0" Name="IpAddress">192.168.1.91</TextBox>
+                    <Button Grid.Row="0" Grid.Column="1" Content="Соединение" Click="Button_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Входящий звонок">Вторая вкладка</TabItem>
             <TabItem Header="Лог">
                 <ScrollViewer>
-                    <TextBlock TextWrapping="Wrap" Name="Log"/>
+                    <TextBlock TextWrapping="Wrap" Name="Log" Text="{Binding Source={StaticResource infoLog},
+                        Path=Json,
+                        Mode=TwoWay}"/>
                 </ScrollViewer>
             </TabItem>
             <StackPanel Height="100" Width="100" VerticalAlignment="Bottom"/>
