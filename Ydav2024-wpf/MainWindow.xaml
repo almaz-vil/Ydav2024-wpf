@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ydav2024_wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="250" Width="800">
+        Title="MainWindow" Height="250" Width="800" FontSize="20">
     <Window.Resources>
         <local:InfoLogT x:Key="infoLog" Json="0"/>
-        <local:BatteryT x:Key="batteryLog"/>
+        <local:BatteryT x:Key="batteryLog" Level="0" Temperature="0" Charge="__" Status="______________"/>
         <local:PhonesT x:Key="phoneLog"/>
-        <local:SignalT x:Key="signalLog"/>
+        <local:SignalT x:Key="signalLog" SimOperatorName="___" SimOperator="___ ___" SimCountyIso="__" NetworkType="__" Rssi="0" Rsrq="0" Rsrp="0"/>
     </Window.Resources>
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
@@ -37,27 +37,23 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                    <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{StaticResource batteryLog}">
+                        <TextBlock ToolTip="Источник зарядки" Text="{Binding Charge}" />
+                        <TextBlock ToolTip="Текущий заряд батареи"  Text="{Binding StringFormat={}{0}%, Path=Level}" Margin="4,0,0,0" />
+                        <TextBlock ToolTip="Температура" Text="{Binding StringFormat={}{0}C°, Path=Temperature}" Margin="4,0,0,0" />
+                        <TextBlock ToolTip="Статус" Text="{Binding Status}" Margin="4,0,0,0" />
+                    </DockPanel>
+                    <DockPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" DataContext="{StaticResource signalLog}">
+                        <TextBlock ToolTip="Имя СИМ" Text="{Binding SimOperatorName}" />
+                        <TextBlock ToolTip="СИМ"  Text="{Binding SimOperator}" Margin="4,0,0,0" />
+                        <TextBlock ToolTip="Код страны"  Text="{Binding SimCountyIso}" Margin="4,0,0,0" />
+                        <TextBlock ToolTip="Тип связи"  Text="{Binding NetworkType}" Margin="4,0,0,0" />
+                        <TextBlock ToolTip="Показатель уровня принимаемого сигнала"  Text="{Binding StringFormat=RSSI: {0}dBm, Path=Rssi}" Margin="4,0,0,0" />
+                        <TextBlock ToolTip="Качество принятых опорных (референсных) сигналов"  Text="{Binding StringFormat=RSRQ: {0}dB, Path=Rsrq}" Margin="4,0,0,0" />
+                        <TextBlock ToolTip="Мощность принимаемого опорного сигнала"  Text="{Binding StringFormat=RSRP: {0}dBm, Path=Rsrp}" Margin="4,0,0,0" />
 
-                        <TextBlock  Text="{Binding StringFormat=Батарейка: {0}, Source={StaticResource batteryLog},
-                        Path=Level,
-                        Mode=TwoWay}" >
-                        </TextBlock>
-                        <TextBlock  Text="{Binding StringFormat=t: {0} , Source={StaticResource batteryLog},
-                        Path=Temperature,
-                        Mode=TwoWay}" >
-                        </TextBlock>
-                        <TextBlock  Text="{Binding StringFormat=Status: {0} , Source={StaticResource batteryLog},
-                        Path=Status,
-                        Mode=TwoWay}" >
-                        </TextBlock>
-                        <TextBlock  Text="{Binding StringFormat=j: {0}, Source={StaticResource batteryLog},
-                        Path=Charge,
-                        Mode=TwoWay}" >
-                        </TextBlock>
                     </DockPanel>
 
-                    <Label Grid.Row="2" Grid.Column="1" Content="Сигнал"/>
                     <TextBox Grid.Row="0" Grid.Column="0" Name="IpAddress">192.168.1.91</TextBox>
                     <Button Grid.Row="0" Grid.Column="1" Content="Соединение" Click="Button_Click"/>
                 </Grid>
@@ -73,6 +69,6 @@
             <StackPanel Height="100" Width="100" VerticalAlignment="Bottom"/>
         </TabControl>
     </DockPanel>
-    
+
 
 </Window>
