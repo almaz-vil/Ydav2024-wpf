@@ -55,49 +55,47 @@ namespace Ydav2024_wpf
         public uint Sms { get; set; }
         [JsonPropertyName("phone")]
         public uint Phone { get; set; }
-        public static (Phones, String) Connect(String adress, CommandSend commandSend, String param)
+        public static (Phones, String, String) Connect(String adress, CommandSend commandSend, String param)
         {
             var sendCommand = new SendCommand();
+            var json = new StringBuilder();
             var sSend = sendCommand.Command(commandSend);
             TcpClient tcpClient = new TcpClient();
             try
             {
                 tcpClient.Connect(adress, 38300);
+                NetworkStream stream = tcpClient.GetStream();
+
+                byte[] data = Encoding.UTF8.GetBytes("  " + sSend + "\n");
+                stream.Write(data, 0, data.Length);
+
+                var responseData = new byte[512];
+                int bytes;
+                do
+                {
+                    bytes = stream.Read(responseData, 0, 512);
+                    json.Append(Encoding.UTF8.GetString(responseData, 0, bytes));
+                }
+                while (bytes > 0); // пока данные есть в потоке 
+
             }
             catch (Exception e)
             {
                 tcpClient.Close();
-                var error = $"Ошибка: {e.Message}!";
-                return (null, error);
+                return (null, "", $"Ошибка: {e.Message}!");
             }
-            NetworkStream stream = tcpClient.GetStream();
-
-            byte[] data = Encoding.UTF8.GetBytes("  " + sSend + "\n");
-            stream.Write(data, 0, data.Length);
-
-            var responseData = new byte[512];
-            var message = new StringBuilder();
-            int bytes;
-            do
-            {
-                bytes = stream.Read(responseData, 0, 512);
-                message.Append(Encoding.UTF8.GetString(responseData, 0, bytes));
-            }
-            while (bytes > 0); // пока данные есть в потоке 
-
+            
             try
             {
                 tcpClient.Close();
-                Phones phones = JsonSerializer.Deserialize<Phones>(message.ToString());
-                return (phones, null);
+                Phones phones = JsonSerializer.Deserialize<Phones>(json.ToString());
+                return (phones, json.ToString(), null);
             }
 
             catch (Exception e)
             {
                 tcpClient.Close();
-                var error = $"Ошибка: {e.Message}!\n {message}";
-
-                return (null, error);
+                return (null, json.ToString(), $"Ошибка: {e.Message}!");
             }
         }
     }
@@ -106,12 +104,55 @@ namespace Ydav2024_wpf
     {
         public Phones Info { get; set; }
         public string Json { get; set; }
+        public string Error { get; set; }
+        public string VisibilityConnect
+        {
+            get
+            {
+                if (this.Error == null)
+                {
+                    return "Collapsed";
+                }
+                else
+                {
+                    return "Visible";
+                }
+            }
+        }
+        public string VisibilitySMS
+        {
+            get
+            {
+                if (this.Info.Sms == 0)
+                {
+                    return "Collapsed";
+                }
+                else
+                {
+                    return "Visible";
+                }
+            }
+        }
+        public string VisibilityPHONE
+        {
+            get
+            {
+                if (this.Info.Phone == 0)
+                {
+                    return "Collapsed";
+                }
+                else
+                {
+                    return "Visible";
+                }
+            }
+        }
 
         public static InfoLog Connect(string address)
         {
 
-            var (info, json) = Phones.Connect(address, CommandSend.INFO, "");
-            return new InfoLog { Info = info, Json = json };
+            var (info, json, error) = Phones.Connect(address, CommandSend.INFO, "");
+            return new InfoLog { Info = info, Json = json, Error=error};
         }
     }
 
