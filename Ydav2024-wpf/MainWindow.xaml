@@ -46,7 +46,37 @@
                     </DockPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Входящий звонок">Вторая вкладка</TabItem>
+            <TabItem Header="Входящий звонок">
+                <StackPanel>
+                    <Button Content="звонки" Click="Button_Click_1"/>
+                    <ScrollViewer CanContentScroll="True"  Height="100">
+                    <ListView x:Name="ListViewPhoneInput" Margin="0,0,0,1" >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Time}">Время</GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding PhoneName}">Телефон</GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    </ScrollViewer>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Контакты">
+                <StackPanel>
+                    <Button Content="Контакты" Click="Button_Contact"/>
+                    <Button Content="CVS" Click="Button_CVS"/>
+                    <ScrollViewer CanContentScroll="True"   Height="90">
+                    <ListView x:Name="ListViewContact" Margin="0,0,0,1">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding Name}">Имя</GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding PhoneStr}">Телефон</GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    </ScrollViewer>
+                </StackPanel>
+            </TabItem>
             <TabItem Header="Лог">
                 <ScrollViewer>
                     <TextBlock TextWrapping="Wrap" Name="Log" Text="{Binding Path=Json}"/>

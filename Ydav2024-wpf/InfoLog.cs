@@ -123,28 +123,45 @@ namespace Ydav2024_wpf
         {
             get
             {
-                if (this.Info.Sms == 0)
+                if (this.Info!=null)
                 {
-                    return "Collapsed";
+                    if (this.Info.Sms == 0)
+                    {
+                        return "Collapsed";
+                    }
+                    else
+                    {
+                        return "Visible";
+                    }
+
                 }
                 else
                 {
                     return "Visible";
                 }
+
             }
         }
         public string VisibilityPHONE
         {
             get
             {
-                if (this.Info.Phone == 0)
+                if (this.Info != null)
                 {
-                    return "Collapsed";
+                    if (this.Info.Phone == 0)
+                    {
+                        return "Collapsed";
+                    }
+                    else
+                    {
+                        return "Visible";
+                    }
                 }
                 else
                 {
                     return "Visible";
                 }
+
             }
         }
 

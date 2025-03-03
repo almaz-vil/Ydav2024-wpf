@@ -48,5 +48,19 @@ namespace Ydav2024_wpf
         {
           
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var phones = PhoneLog.Connect(IpAddress.Text);
+            ListViewPhoneInput.ItemsSource = phones.Phones.PhoneList;
+        }
+        private void Button_Contact(object sender, RoutedEventArgs e)
+        {
+            var contacts = ContactLog.Connect(IpAddress.Text);
+            ListViewContact.ItemsSource = contacts.Contacts.Contact;
+        }
+        private void Button_CVS(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }

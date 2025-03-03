@@ -9,7 +9,9 @@ namespace Ydav2024_wpf
 {
     public enum CommandSend
     {
-        INFO
+        INFO,
+        PHONE,
+        CONTACT
     }
 
     public class SendCommandJson
@@ -26,13 +28,25 @@ namespace Ydav2024_wpf
             public string Command(CommandSend commandSend)
             {
                 switch (commandSend) {
-                    case CommandSend.INFO:
-                        var sendCommandJson = new SendCommandJson {
-                            Command = "INFO",
-                            Param = ""
-                        };
-                        return JsonSerializer.Serialize<SendCommandJson>(sendCommandJson);
-                    default:
+                case CommandSend.INFO:
+                    return JsonSerializer.Serialize<SendCommandJson>(new SendCommandJson
+                    {
+                        Command = "INFO",
+                        Param = ""
+                    });
+                case CommandSend.PHONE:
+                    return JsonSerializer.Serialize<SendCommandJson>(new SendCommandJson
+                    {
+                        Command = "PHONE",
+                        Param = ""
+                    });
+                case CommandSend.CONTACT:
+                    return JsonSerializer.Serialize<SendCommandJson>(new SendCommandJson
+                    {
+                        Command = "CONTACT",
+                        Param = ""
+                    });
+                default:
                         return "";
                 }
             }
