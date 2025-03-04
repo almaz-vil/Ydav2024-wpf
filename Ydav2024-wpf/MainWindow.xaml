@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ydav2024_wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="250" Width="800" FontSize="20">
+        Title="MainWindow" Height="337.5" Width="831.25" FontSize="20">
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
@@ -50,32 +50,43 @@
                 <StackPanel>
                     <Button Content="звонки" Click="Button_Click_1"/>
                     <ScrollViewer CanContentScroll="True"  Height="100">
-                    <ListView x:Name="ListViewPhoneInput" Margin="0,0,0,1" >
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Time}">Время</GridViewColumn>
-                                <GridViewColumn DisplayMemberBinding="{Binding PhoneName}">Телефон</GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                        <ListView x:Name="ListViewPhoneInput" Margin="0,0,0,1" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Time}">Время</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding PhoneName}">Телефон</GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </ScrollViewer>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Контакты">
-                <StackPanel>
-                    <Button Content="Контакты" Click="Button_Contact"/>
-                    <Button Content="CVS" Click="Button_CVS"/>
-                    <ScrollViewer CanContentScroll="True"   Height="90">
-                    <ListView x:Name="ListViewContact" Margin="0,0,0,1">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Name}">Имя</GridViewColumn>
-                                <GridViewColumn DisplayMemberBinding="{Binding PhoneStr}">Телефон</GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                <Grid>
+                    <!-- Устанавливаем  строки -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"></RowDefinition>
+                        <RowDefinition Height="35"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <!-- Устанавливаем столбца -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Grid.Row="0" Content="Контакты" Click="Button_Contact"/>
+                    <Button Grid.Column="0" Grid.Row="1" Content="CVS" Click="Button_CVS"/>
+                    <ScrollViewer Grid.Column="0" Grid.Row="2" CanContentScroll="True"  Margin="4">
+                        <ListView x:Name="ListViewContact">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Name}">Имя</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Phone}">Телефон</GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </ScrollViewer>
-                </StackPanel>
+                </Grid>    
             </TabItem>
             <TabItem Header="Лог">
                 <ScrollViewer>
@@ -83,6 +94,7 @@
                 </ScrollViewer>
             </TabItem>
             <StackPanel Height="100" Width="100" VerticalAlignment="Bottom"/>
+            
         </TabControl>
     </DockPanel>
 

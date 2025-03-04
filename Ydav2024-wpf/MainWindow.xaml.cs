@@ -17,18 +17,18 @@ using System.Net.Sockets;
 
 namespace Ydav2024_wpf
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
-    /// 
- 
+
     public partial class MainWindow : Window
     {
-
+        ApplicationContext db; 
         public MainWindow()
         {
             InitializeComponent();
 
+            db = new ApplicationContext();
+            
+            List<contact> contacts = db.contact.ToList();
+            ListViewContact.ItemsSource = contacts;
             //  установка таймера
 
             DispatcherTimer timer;
@@ -58,6 +58,12 @@ namespace Ydav2024_wpf
         {
             var contacts = ContactLog.Connect(IpAddress.Text);
             ListViewContact.ItemsSource = contacts.Contacts.Contact;
+            contacts.Contacts.Contact.ForEach((Contact contact) => {
+                var con = new contact(contact.Name, contact.PhoneStr);
+                db.contact.Add(con);
+            });
+            db.SaveChanges();
+
         }
         private void Button_CVS(object sender, RoutedEventArgs e)
         {
