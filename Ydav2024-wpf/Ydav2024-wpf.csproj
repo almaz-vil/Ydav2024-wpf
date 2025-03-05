@@ -145,6 +145,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PhoneDelete.cs" />
+    <Compile Include="PhoneInput_db.cs" />
     <Compile Include="PhoneLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

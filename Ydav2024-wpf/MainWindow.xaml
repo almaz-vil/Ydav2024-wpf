@@ -17,13 +17,15 @@
             <StatusBarItem>
                 <TextBlock Text="{Binding StringFormat=Входящих СМС {0}, Path=Info.Sms}" />
             </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding StringFormat=Входящих звонков {0}, Path=Info.Phone}" />
+            </StatusBarItem>
         </StatusBar>
         <TabControl>
             <TabItem Header="Сигнал и батарейка" Foreground="White"  Background="Black">
                 <StackPanel Background="Black">
                     <DockPanel Visibility="{Binding VisibilityConnect}">
                         <TextBox  Name="IpAddress">192.168.1.91</TextBox>
-                        <Button Content="Соединение" Click="Button_Click"/>
                     </DockPanel>
                     <DockPanel>
                         <TextBlock Text="Новая СИМ" Background="ForestGreen" Visibility="{Binding VisibilitySMS}"/>
@@ -47,19 +49,28 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="Входящий звонок">
-                <StackPanel>
-                    <Button Content="звонки" Click="Button_Click_1"/>
-                    <ScrollViewer CanContentScroll="True"  Height="100">
+                <Grid>
+                    <!-- Устанавливаем  строки -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <!-- Устанавливаем столбца -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Grid.Row="0" Content="звонки" Click="Button_Input_Phone"/>
+                    <ScrollViewer Grid.Row="1" Grid.Column="0" CanContentScroll="True">
                         <ListView x:Name="ListViewPhoneInput" Margin="0,0,0,1" >
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn DisplayMemberBinding="{Binding Time}">Время</GridViewColumn>
-                                    <GridViewColumn DisplayMemberBinding="{Binding PhoneName}">Телефон</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Phone}">Телефон</GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>
                     </ScrollViewer>
-                </StackPanel>
+                </Grid>
             </TabItem>
             <TabItem Header="Контакты">
                 <Grid>
@@ -73,9 +84,11 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-
                     <Button Grid.Column="0" Grid.Row="0" Content="Контакты" Click="Button_Contact"/>
-                    <Button Grid.Column="0" Grid.Row="1" Content="CVS" Click="Button_CVS"/>
+                    <DockPanel Grid.Column="0" Grid.Row="1">
+                        <Button  Content="Удалить всё" Click="Button_Delete_Contact"/>
+                        <Button  Content="CVS" Click="Button_CVS"/>
+                    </DockPanel>
                     <ScrollViewer Grid.Column="0" Grid.Row="2" CanContentScroll="True"  Margin="4">
                         <ListView x:Name="ListViewContact">
                             <ListView.View>

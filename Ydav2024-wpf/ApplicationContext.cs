@@ -10,6 +10,7 @@ namespace Ydav2024_wpf
     class ApplicationContext: DbContext
     {
         public DbSet<contact> contact { get; set; }
+        public DbSet<phone_input> phone_input { get; set; }
 
         public ApplicationContext() : base("DefaultConnection") { }
     }

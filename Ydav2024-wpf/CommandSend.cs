@@ -11,7 +11,8 @@ namespace Ydav2024_wpf
     {
         INFO,
         PHONE,
-        CONTACT
+        CONTACT,
+        DelPhone
     }
 
     public class SendCommandJson
@@ -25,7 +26,7 @@ namespace Ydav2024_wpf
     }
      public class SendCommand
         {
-            public string Command(CommandSend commandSend)
+            public string Command(CommandSend commandSend, string param="")
             {
                 switch (commandSend) {
                 case CommandSend.INFO:
@@ -45,6 +46,12 @@ namespace Ydav2024_wpf
                     {
                         Command = "CONTACT",
                         Param = ""
+                    });
+                case CommandSend.DelPhone:
+                    return JsonSerializer.Serialize<SendCommandJson>(new SendCommandJson
+                    {
+                        Command = "DELETE_PHONE",
+                        Param = param
                     });
                 default:
                         return "";
