@@ -11,6 +11,7 @@ namespace Ydav2024_wpf
     {
         public DbSet<contact> contact { get; set; }
         public DbSet<phone_input> phone_input { get; set; }
+        public DbSet<sms_input> sms_input { get; set; }
 
         public ApplicationContext() : base("DefaultConnection") { }
     }

@@ -12,8 +12,13 @@ namespace Ydav2024_wpf
         INFO,
         PHONE,
         CONTACT,
-        DelPhone
+        SmsInput,
+        DelSmsInput,
+        DelPhone,
+        SmsOutput,
+        SmsOutputStatus,
     }
+
 
     public class SendCommandJson
     {
@@ -51,6 +56,30 @@ namespace Ydav2024_wpf
                     return JsonSerializer.Serialize<SendCommandJson>(new SendCommandJson
                     {
                         Command = "DELETE_PHONE",
+                        Param = param
+                    });
+                case CommandSend.SmsInput:
+                    return JsonSerializer.Serialize<SendCommandJson>(new SendCommandJson
+                    {
+                        Command = "SMS_INPUT",
+                        Param = param
+                    });
+                case CommandSend.DelSmsInput:
+                    return JsonSerializer.Serialize<SendCommandJson>(new SendCommandJson
+                    {
+                        Command = "DELETE_SMS_INPUT",
+                        Param = param
+                    });
+                case CommandSend.SmsOutput:
+                    return JsonSerializer.Serialize<SendCommandJson>(new SendCommandJson
+                    {
+                        Command = "SMS_OUTPUT",
+                        Param = param
+                    });
+                case CommandSend.SmsOutputStatus:
+                    return JsonSerializer.Serialize<SendCommandJson>(new SendCommandJson
+                    {
+                        Command = "SMS_OUTPUT_STATUS",
                         Param = param
                     });
                 default:

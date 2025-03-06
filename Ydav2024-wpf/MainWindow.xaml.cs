@@ -30,9 +30,15 @@ namespace Ydav2024_wpf
             
             List<contact> contacts = db.contact.ToList();
             ListViewContact.ItemsSource = contacts;
-
+            ComboBoxContact.ItemsSource = contacts;
+            ComboBoxContact.DataContext = contacts;
+            
             List<phone_input> phoneDb = db.phone_input.ToList();
             ListViewPhoneInput.ItemsSource = phoneDb;
+            
+            List<sms_input> smsInputDb = db.sms_input.ToList();
+            ListViewSmsInput.ItemsSource = smsInputDb;
+
             //  установка таймера
 
             DispatcherTimer timer;
@@ -124,6 +130,30 @@ namespace Ydav2024_wpf
 
             List<phone_input> phoneDb = db.phone_input.ToList();
             ListViewPhoneInput.ItemsSource = phoneDb;
+
+        }
+
+        private void Button_Input_Sms(object sender, RoutedEventArgs e)
+        {
+            StringBuilder param = new StringBuilder();
+            var smsInput = SMSInputLog.Connect(IpAddress.Text);
+            smsInput.SmsInput.Sms.ForEach((Sms sms) =>
+            {
+                var sm = new sms_input(sms.Time, sms.Phone, sms.Id, sms.Body);
+                if (param.Length > 0)
+                {
+                    param.Append(" OR ");
+
+                }
+                param.Append("_id=" + sms.Id);
+                db.sms_input.Add(sm);
+            });
+            db.SaveChanges();
+
+            var smsInputDelete = SMSInputDelete.Connect(IpAddress.Text, param.ToString());
+
+            List<sms_input> smsDb = db.sms_input.ToList();
+            ListViewSmsInput.ItemsSource = smsDb;
 
         }
     }

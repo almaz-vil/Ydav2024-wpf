@@ -25,6 +25,13 @@ namespace Ydav2024_wpf
             set { phone = value; }
         }
 
+        public string NamePhone
+        {
+            get
+            {
+                return Name + Phone;
+            }
+        }
 
         public contact() { }
 

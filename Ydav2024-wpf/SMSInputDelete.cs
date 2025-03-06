@@ -1,42 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json.Serialization;
 using System.Net.Sockets;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Ydav2024_wpf
 {
-    public class Contact
-    {
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
-        [JsonPropertyName("phone")]
-        public List<string> Phone { get; set; } = new List<string>();
-
-        public string PhoneStr
-        {
-            get
-            {
-                return String.Join(",", this.Phone);
-            }
-        }
-    
-}
-
-    public class Contacts
+    public class SmsCount
     {
         [JsonPropertyName("time")]
         public string Time { get; set; }
-        [JsonPropertyName("contact")]
-        public List<Contact> Contact { get; set; } = new List<Contact>();
-        public static (Contacts, String, String) Connect(String adress, CommandSend commandSend, String param)
+        [JsonPropertyName("sms")]
+        public uint Sms { get; set; }
+        public static (SmsCount, String, String) Connect(String adress, CommandSend commandSend, String param)
         {
             var sendCommand = new SendCommand();
             var json = new StringBuilder();
-            var sSend = sendCommand.Command(commandSend);
+            var sSend = sendCommand.Command(commandSend, param);
             TcpClient tcpClient = new TcpClient();
             try
             {
@@ -65,8 +48,8 @@ namespace Ydav2024_wpf
             try
             {
                 tcpClient.Close();
-                Contacts contacts = JsonSerializer.Deserialize<Contacts>(json.ToString());
-                return (contacts, json.ToString(), null);
+                SmsCount smsCount = JsonSerializer.Deserialize<SmsCount>(json.ToString());
+                return (smsCount, json.ToString(), null);
             }
 
             catch (Exception e)
@@ -76,10 +59,9 @@ namespace Ydav2024_wpf
             }
         }
     }
-
-    public class ContactLog
+    class SMSInputDelete
     {
-        public Contacts Contacts { get; set; } = new Contacts();
+        public SmsCount SmsCount { get; set; } = new SmsCount();
         public string Json { get; set; } = string.Empty;
         public string Error { get; set; }
         public string VisibilityConnect
@@ -97,12 +79,13 @@ namespace Ydav2024_wpf
             }
         }
 
-        public static ContactLog Connect(string address)
+        public static SMSInputDelete Connect(string address, string param)
         {
 
-            var (contacts, json, error) = Contacts.Connect(address, CommandSend.CONTACT, "");
-            return new ContactLog { Contacts = contacts, Json = json, Error = error };
+            var (sms, json, error) = SmsCount.Connect(address, CommandSend.DelSmsInput, param);
+            return new SMSInputDelete { SmsCount = sms, Json = json, Error = error };
         }
     }
 
 }
+

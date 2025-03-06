@@ -1,38 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json.Serialization;
 using System.Net.Sockets;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Ydav2024_wpf
 {
-    public class Contact
+    public class Sms
     {
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
+        [JsonPropertyName("time")] 
+        public string Time { get; set; }
         [JsonPropertyName("phone")]
-        public List<string> Phone { get; set; } = new List<string>();
+        public string Phone { get; set; }
+        [JsonPropertyName("body")]
+        public string Body { get; set; }
+    }
 
-        public string PhoneStr
-        {
-            get
-            {
-                return String.Join(",", this.Phone);
-            }
-        }
-    
-}
-
-    public class Contacts
+    public class SmsInput
     {
         [JsonPropertyName("time")]
         public string Time { get; set; }
-        [JsonPropertyName("contact")]
-        public List<Contact> Contact { get; set; } = new List<Contact>();
-        public static (Contacts, String, String) Connect(String adress, CommandSend commandSend, String param)
+        [JsonPropertyName("sms")]
+        public List<Sms> Sms { get; set; } = new List<Sms>();
+        public static (SmsInput, String, String) Connect(String adress, CommandSend commandSend, String param)
         {
             var sendCommand = new SendCommand();
             var json = new StringBuilder();
@@ -65,8 +60,8 @@ namespace Ydav2024_wpf
             try
             {
                 tcpClient.Close();
-                Contacts contacts = JsonSerializer.Deserialize<Contacts>(json.ToString());
-                return (contacts, json.ToString(), null);
+                SmsInput smsInput = JsonSerializer.Deserialize<SmsInput>(json.ToString());
+                return (smsInput, json.ToString(), null);
             }
 
             catch (Exception e)
@@ -77,9 +72,9 @@ namespace Ydav2024_wpf
         }
     }
 
-    public class ContactLog
+    class SMSInputLog
     {
-        public Contacts Contacts { get; set; } = new Contacts();
+        public SmsInput SmsInput { get; set; } = new SmsInput();
         public string Json { get; set; } = string.Empty;
         public string Error { get; set; }
         public string VisibilityConnect
@@ -97,12 +92,14 @@ namespace Ydav2024_wpf
             }
         }
 
-        public static ContactLog Connect(string address)
+        public static SMSInputLog Connect(string address)
         {
 
-            var (contacts, json, error) = Contacts.Connect(address, CommandSend.CONTACT, "");
-            return new ContactLog { Contacts = contacts, Json = json, Error = error };
+            var (smsInput, json, error) = SmsInput.Connect(address, CommandSend.SmsInput, "");
+            return new SMSInputLog { SmsInput = smsInput, Json = json, Error = error };
         }
     }
 
 }
+
+

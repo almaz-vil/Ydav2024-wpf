@@ -72,6 +72,66 @@
                     </ScrollViewer>
                 </Grid>
             </TabItem>
+            <TabItem Header="Входящие СМС">
+                <Grid>
+                    <!-- Устанавливаем  строки -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <!-- Устанавливаем столбца -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Grid.Row="0" Content="СМС" Click="Button_Input_Sms"/>
+                    <ScrollViewer Grid.Row="1" Grid.Column="0" CanContentScroll="True">
+                        <ListView x:Name="ListViewSmsInput" Margin="0,0,0,1" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Time}">Время</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Phone}">Телефон</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Body}">Текст</GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+            <TabItem Header="СМС">
+                <Grid>
+                    <!-- Устанавливаем  строки -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <!-- Устанавливаем столбца -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" Text="Кому:"/>
+                    <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SelectedItem, ElementName=ComboBoxContact}"/>
+                    <ComboBox x:Name="ComboBoxContact" Grid.Column="2" Grid.Row="0"
+                              DisplayMemberPath="NamePhone"
+                              SelectedValue="{Binding Phone}"
+                              SelectedValuePath="Phone"
+                              >
+                    </ComboBox>
+                    <Button Grid.Column="0" Grid.Row="1" Content="СМС" Click="Button_Input_Sms"/>
+                    <ScrollViewer Grid.Row="1" Grid.Column="0" CanContentScroll="True">
+                        <ListView x:Name="ListViewSmsOutput" Margin="0,0,0,1" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Time}">Время</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Phone}">Телефон</GridViewColumn>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Body}">Текст</GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
             <TabItem Header="Контакты">
                 <Grid>
                     <!-- Устанавливаем  строки -->
