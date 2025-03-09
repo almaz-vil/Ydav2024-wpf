@@ -39,6 +39,9 @@ namespace Ydav2024_wpf
             List<sms_input> smsInputDb = db.sms_input.ToList();
             ListViewSmsInput.ItemsSource = smsInputDb;
 
+            List<sms_output> smsOutputDb = db.sms_output.ToList();
+
+
             //  установка таймера
 
             DispatcherTimer timer;
@@ -155,6 +158,30 @@ namespace Ydav2024_wpf
             List<sms_input> smsDb = db.sms_input.ToList();
             ListViewSmsInput.ItemsSource = smsDb;
 
+        }
+
+        private void ComboBoxContact_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+           if (ComboBoxContact.SelectedItem is contact contactSelect)           
+            TextBoxPhone.Text = contactSelect.Phone;
+        }
+
+        private void Button_Output_Sms(object sender, RoutedEventArgs e) 
+        {
+            var smsOutput = new sms_output(TextBoxPhone.Text, TextBoxText.Text);
+            db.sms_output.Add(smsOutput);
+            db.SaveChanges();
+            var smsOutputParam = new SmsOutputParam(smsOutput._id, smsOutput.Phone, smsOutput.Text);
+            var smsOutputLog = new SMSOutputLog.XSend(IpAddress.Text, smsOutputParam);
+        
+        }
+
+        private void ListViewSmsOutput_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ListViewSmsOutput.SelectedItem is sms_output smsOutput)
+            {
+                var smsStatus = new SMSOutputLog.XStatus(IpAddress.Text, smsOutput._id);
+            }
         }
     }
 }

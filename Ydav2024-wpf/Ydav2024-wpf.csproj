@@ -129,6 +129,8 @@
     <Compile Include="SMSInputDelete.cs" />
     <Compile Include="SMSInputLog.cs" />
     <Compile Include="SmsInput_db.cs" />
+    <Compile Include="SMSOutputLog.cs" />
+    <Compile Include="SmsOutput_db.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
