@@ -28,7 +28,7 @@ namespace Ydav2024_wpf
         public ResultStatus Delivery { get; set; }
     }
 
-    public class StatusSMSOutput
+    public class StatusSMSOutput: AndroidConnect
     {
         [JsonPropertyName("time")]
         public string Time { get; set; }
@@ -38,46 +38,8 @@ namespace Ydav2024_wpf
 
         public static (StatusSMSOutput, String, String) Connect(String adress, CommandSend commandSend, String param)
         {
-            var sendCommand = new SendCommand();
-            var json = new StringBuilder();
-            var sSend = sendCommand.Command(commandSend);
-            TcpClient tcpClient = new TcpClient();
-            try
-            {
-                tcpClient.Connect(adress, 38300);
-                NetworkStream stream = tcpClient.GetStream();
-
-                byte[] data = Encoding.UTF8.GetBytes("  " + sSend + "\n");
-                stream.Write(data, 0, data.Length);
-
-                var responseData = new byte[512];
-                int bytes;
-                do
-                {
-                    bytes = stream.Read(responseData, 0, 512);
-                    json.Append(Encoding.UTF8.GetString(responseData, 0, bytes));
-                }
-                while (bytes > 0); // пока данные есть в потоке 
-
-            }
-            catch (Exception e)
-            {
-                tcpClient.Close();
-                return (null, "", $"Ошибка: {e.Message}!");
-            }
-
-            try
-            {
-                tcpClient.Close();
-                StatusSMSOutput statusSMSOutput = JsonSerializer.Deserialize<StatusSMSOutput>(json.ToString());
-                return (statusSMSOutput, json.ToString(), null);
-            }
-
-            catch (Exception e)
-            {
-                tcpClient.Close();
-                return (null, json.ToString(), $"Ошибка: {e.Message}!");
-            }
+            var (json, jsonText, error) = ConnectBase(adress, commandSend, param);
+            return (json==null?null:JsonSerializer.Deserialize<StatusSMSOutput>(json), jsonText, error);
         }
     }
 
@@ -96,7 +58,8 @@ namespace Ydav2024_wpf
 
         public string Json()
         {
-            return JsonSerializer.Serialize<SmsOutputParam>(this);
+            var res = "{id:\""+this.Id+"\",phone:\""+this.Phone+ "\",text:\""+this.Text+"\"}";
+            return res;
         }
     }
 
@@ -122,12 +85,12 @@ namespace Ydav2024_wpf
             }
         }
 
-        public static SMSOutputLog XSend(string address, SmsOutputParam smsOutputParam)
+        public static SMSOutputLog Send(string address, SmsOutputParam smsOutputParam)
         {
-            var (status, json, error) = StatusSMSOutput.Connect(address, CommandSend.SmsOutputStatus, smsOutputParam.Json());
+            var (status, json, error) = StatusSMSOutput.Connect(address, CommandSend.SmsOutput, smsOutputParam.Json());
             return new SMSOutputLog { StatusLog = status, Json = json, Error = error };
         }
-        public static SMSOutputLog XStatus(string address, string id)
+        public static SMSOutputLog Status(string address, string id)
         {
             var (status, json, error) = StatusSMSOutput.Connect(address, CommandSend.SmsOutputStatus, id);
             return new SMSOutputLog { StatusLog = status, Json = json, Error = error };

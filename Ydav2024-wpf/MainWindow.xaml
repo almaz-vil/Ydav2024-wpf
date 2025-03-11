@@ -12,7 +12,10 @@
                 <TextBlock Text="{Binding Path=Info.Time}" />
             </StatusBarItem>
             <StatusBarItem>
-                <TextBlock Text="{Binding Error}" />
+                <TextBlock Text="{Binding Error}" />                
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock x:Name="TextError"/>
             </StatusBarItem>
             <StatusBarItem>
                 <TextBlock Text="{Binding StringFormat=Входящих СМС {0}, Path=Info.Sms}" />
@@ -26,11 +29,12 @@
                 <StackPanel Background="Black">
                     <DockPanel Visibility="{Binding VisibilityConnect}">
                         <TextBox  Name="IpAddress">192.168.1.91</TextBox>
+                        <Button Content="Соединиться" Click="Button_Click"/>
                     </DockPanel>
-                    <DockPanel>
-                        <TextBlock Text="Новая СИМ" Background="ForestGreen" Visibility="{Binding VisibilitySMS}"/>
-                        <TextBlock Text="Новый звонок" Background="ForestGreen" Visibility="{Binding VisibilityPHONE}"  Margin="10,0,0,0"/>
-                    </DockPanel>
+                    <StackPanel Background="Green">
+                        <TextBlock Text="Новая СИМ" Background="ForestGreen" Visibility="{Binding VisibilitySMS}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Новый звонок" Background="ForestGreen" Visibility="{Binding VisibilityPHONE}" HorizontalAlignment="Center"/>
+                    </StackPanel>
                     <DockPanel>
                         <TextBlock ToolTip="Источник зарядки" Text="{Binding Path=Info.Battery.Charge}" />
                         <TextBlock ToolTip="Текущий заряд батареи"  Text="{Binding StringFormat={}{0}%, Path=Info.Battery.Level}" Margin="4,0,0,0" />
@@ -97,7 +101,7 @@
                     </ScrollViewer>
                 </Grid>
             </TabItem>
-            <TabItem Header="СМС">
+            <TabItem Header="СМС" x:Name="SMSNew">
                 <Grid>
                     <!-- Устанавливаем  строки -->
                     <Grid.RowDefinitions>
@@ -155,8 +159,7 @@
                         <Button  Content="Удалить всё" Click="Button_Delete_Contact"/>
                         <Button  Content="CVS" Click="Button_CVS"/>
                     </DockPanel>
-                    <ScrollViewer Grid.Column="0" Grid.Row="2" CanContentScroll="True"  Margin="4">
-                        <ListView x:Name="ListViewContact">
+                        <ListView  Grid.Column="0" Grid.Row="2" x:Name="ListViewContact" SelectionChanged="ListViewContact_SelectionChanged">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn DisplayMemberBinding="{Binding Name}">Имя</GridViewColumn>
@@ -164,7 +167,6 @@
                                 </GridView>
                             </ListView.View>
                         </ListView>
-                    </ScrollViewer>
                 </Grid>    
             </TabItem>
             <TabItem Header="Лог">

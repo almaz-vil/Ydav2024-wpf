@@ -15,20 +15,24 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Net;
 using System.Net.Sockets;
+using System.ComponentModel;
 
 namespace Ydav2024_wpf
 {
 
     public partial class MainWindow : Window
     {
-        ApplicationContext db; 
+        ApplicationContext db;
+        DispatcherTimer timer;
+
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new InfoLog();
 
             db = new ApplicationContext();
             
-            List<contact> contacts = db.contact.ToList();
+            List<contact> contacts = db.contact.OrderBy(p=>p.Name).ToList();
             ListViewContact.ItemsSource = contacts;
             ComboBoxContact.ItemsSource = contacts;
             ComboBoxContact.DataContext = contacts;
@@ -40,11 +44,10 @@ namespace Ydav2024_wpf
             ListViewSmsInput.ItemsSource = smsInputDb;
 
             List<sms_output> smsOutputDb = db.sms_output.ToList();
-
+            ListViewSmsOutput.ItemsSource = smsOutputDb;
 
             //  установка таймера
 
-            DispatcherTimer timer;
             timer = new DispatcherTimer();
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = new TimeSpan(0, 0, 1);
@@ -53,23 +56,95 @@ namespace Ydav2024_wpf
 
         void timer_Tick(object sender, EventArgs e)
         {
-            DataContext = InfoLog.Connect(IpAddress.Text);
+            (sender as DispatcherTimer).Stop();
+            BackgroundWorker worker = new BackgroundWorker();
+
+            if (DataContext is InfoLog info)
+            {
+                if (info.Error != null)
+                {
+                    TextError.Text = $"Соединение с {IpAddress.Text} ...";
+                    DataContext = new InfoLog();
+                }
+            } else {
+                TextError.Text = $"Соединение с {IpAddress.Text} ...";
+            }
+            worker.DoWork += Worker_DoWork_InfoLog;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted_InfoLog;
+            worker.RunWorkerAsync(IpAddress.Text);
+        }
+
+        private void Worker_RunWorkerCompleted_InfoLog(object sender, RunWorkerCompletedEventArgs e)
+        {
+            TextError.Text = "";
+
+            if (e.Result is InfoLog info)
+            {
+                if (info.Error == null)
+                {
+                    timer.Start();
+                }
+                DataContext = info;
+            }
 
         }
+
+        private void Worker_DoWork_InfoLog(object sender, DoWorkEventArgs e)
+        {
+            var info = InfoLog.Connect(e.Argument as string);
+            e.Result = info;
+        }
+
         private void Button_Contact(object sender, RoutedEventArgs e)
         {
-            var contacts = ContactLog.Connect(IpAddress.Text);
-            contacts.Contacts.Contact.ForEach((Contact contact) => {
-                var con = new contact(contact.Name, contact.PhoneStr);
-                db.contact.Add(con);
-            });
-            db.SaveChanges();
+            timer.Stop();
+            while (timer.IsEnabled)
+            {
 
-            List<contact> contactsDb = db.contact.ToList();
-            ListViewContact.ItemsSource = contactsDb;
+            }
+            DataContext = new InfoLog();
+            BackgroundWorker worker = new BackgroundWorker();
+
+           TextError.Text = $"Загрузка контактов. Ждите ...";
+
+            worker.DoWork += Worker_DoWork_Contact ;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted_Contact;
+            worker.RunWorkerAsync(IpAddress.Text);
 
 
         }
+
+        private void Worker_RunWorkerCompleted_Contact(object sender, RunWorkerCompletedEventArgs e)
+        {
+            TextError.Text = "";
+            if (e.Result is ContactLog info)
+            {
+                if (info.Error == null)
+                {
+                    List<contact> contactsDb = db.contact.ToList();
+                    ListViewContact.ItemsSource = contactsDb;
+                    timer.Start();
+                }
+            }
+            
+        }
+
+        private void Worker_DoWork_Contact(object sender, DoWorkEventArgs e)
+        {
+
+            var contacts = ContactLog.Connect(e.Argument as string);
+            if (contacts.Error == null)
+            {
+                contacts.Contacts.Contact.ForEach((Contact contact) =>
+                {
+                    var con = new contact(contact.Name, contact.PhoneStr);
+                    db.contact.Add(con);
+                });
+                db.SaveChanges();
+            }
+            e.Result = contacts;
+        }
+
         private void Button_CVS(object sender, RoutedEventArgs e)
         {
             var date = new DateTime();
@@ -114,56 +189,130 @@ namespace Ydav2024_wpf
 
         private void Button_Input_Phone(object sender, RoutedEventArgs e)
         {
-            StringBuilder param = new StringBuilder();
-            var phones = PhoneLog.Connect(IpAddress.Text);
-            phones.Phones.PhoneList.ForEach((Phone phone) =>
+            timer.Stop();
+            while (timer.IsEnabled)
             {
-                var ph = new phone_input(phone.Time, phone.PhoneName, phone.Id, phone.Status);
-                if (param.Length > 0)
+
+            }
+            DataContext = new InfoLog();
+            BackgroundWorker worker = new BackgroundWorker();
+
+            TextError.Text = $"Загрузка входящих звонков. Ждите ...";
+
+            worker.DoWork += Worker_DoWork_InputPhone;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted_InputPhone;
+            worker.RunWorkerAsync(IpAddress.Text);
+        }
+
+        private void Worker_RunWorkerCompleted_InputPhone(object sender, RunWorkerCompletedEventArgs e)
+        {
+            TextError.Text = "";
+            if (e.Result is PhoneLog info)
+            {
+                if (info.Error == null)
                 {
-                    param.Append(" OR ");
-
+                    List<phone_input> phoneDb = db.phone_input.ToList();
+                    ListViewPhoneInput.ItemsSource = phoneDb;
+                    timer.Start();
                 }
-                param.Append("_id=" + phone.Id);
-                db.phone_input.Add(ph);
-            });
-            db.SaveChanges();
+            }
 
-            var phoneDelete = PhoneDelete.Connect(IpAddress.Text, param.ToString());
+        }
 
-            List<phone_input> phoneDb = db.phone_input.ToList();
-            ListViewPhoneInput.ItemsSource = phoneDb;
+        private void Worker_DoWork_InputPhone(object sender, DoWorkEventArgs e)
+        {
 
+            StringBuilder param = new StringBuilder();
+            var address = e.Argument as string;
+            var phones = PhoneLog.Connect(address);
+            if (phones.Error == null)
+            {
+                phones.Phones.PhoneList.ForEach((Phone phone) =>
+                {
+                    var ph = new phone_input(phone.Time, phone.PhoneName, phone.Id, phone.Status);
+                    if (param.Length > 0)
+                    {
+                        param.Append(" OR ");
+
+                    }
+                    param.Append("_id=" + phone.Id);
+                    db.phone_input.Add(ph);
+                });
+                db.SaveChanges();
+                var phoneDelete = PhoneDelete.Connect(address, param.ToString());
+            }
+            e.Result = phones;
         }
 
         private void Button_Input_Sms(object sender, RoutedEventArgs e)
         {
-            StringBuilder param = new StringBuilder();
-            var smsInput = SMSInputLog.Connect(IpAddress.Text);
-            smsInput.SmsInput.Sms.ForEach((Sms sms) =>
+            timer.Stop();
+            while (timer.IsEnabled)
             {
-                var sm = new sms_input(sms.Time, sms.Phone, sms.Id, sms.Body);
-                if (param.Length > 0)
+
+            }
+            DataContext = new InfoLog();
+            BackgroundWorker worker = new BackgroundWorker();
+
+            TextError.Text = $"Загрузка входящих СМС. Ждите ...";
+
+            worker.DoWork += Worker_DoWork_InputSms; ;
+            worker.RunWorkerCompleted += Worker_RunWorkerCompleted_InputSms; ;
+            worker.RunWorkerAsync(IpAddress.Text);
+        }
+
+        private void Worker_RunWorkerCompleted_InputSms(object sender, RunWorkerCompletedEventArgs e)
+        {
+            TextError.Text = "";
+            if (e.Result is SMSInputLog info)
+            {
+                if (info.Error == null)
                 {
-                    param.Append(" OR ");
-
+                    List<sms_input> smsDb = db.sms_input.ToList();
+                    ListViewSmsInput.ItemsSource = smsDb;
+                    timer.Start();
                 }
-                param.Append("_id=" + sms.Id);
-                db.sms_input.Add(sm);
-            });
-            db.SaveChanges();
+            }
 
-            var smsInputDelete = SMSInputDelete.Connect(IpAddress.Text, param.ToString());
+        }
 
-            List<sms_input> smsDb = db.sms_input.ToList();
-            ListViewSmsInput.ItemsSource = smsDb;
+        private void Worker_DoWork_InputSms(object sender, DoWorkEventArgs e)
+        {
+            StringBuilder param = new StringBuilder();
+            var address = e.Argument as string;
+            var smsInput = SMSInputLog.Connect(address);
+            if (smsInput.Error == null)
+            {
+                smsInput.SmsInput.Sms.ForEach((Sms sms) =>
+                {
+                    var sm = new sms_input(sms.Time, sms.Phone, sms.Id, sms.Body);
+                    if (param.Length > 0)
+                    {
+                        param.Append(" OR ");
 
+                    }
+                    param.Append("_id=" + sms.Id);
+                    db.sms_input.Add(sm);
+                });
+                db.SaveChanges();
+
+                var smsInputDelete = SMSInputDelete.Connect(address, param.ToString());
+            }
+            e.Result = smsInput;
         }
 
         private void ComboBoxContact_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-           if (ComboBoxContact.SelectedItem is contact contactSelect)           
-            TextBoxPhone.Text = contactSelect.Phone;
+            if (ComboBoxContact.SelectedItem is contact contactSelect)
+            {
+                var str = contactSelect.Phone;
+                var charsToRemove = new string[] { " ", "-", "(", ")"};
+                foreach (var c in charsToRemove)
+                {
+                    str = str.Replace(c, String.Empty);
+                }
+                TextBoxPhone.Text = str;
+            }
         }
 
         private void Button_Output_Sms(object sender, RoutedEventArgs e) 
@@ -172,15 +321,46 @@ namespace Ydav2024_wpf
             db.sms_output.Add(smsOutput);
             db.SaveChanges();
             var smsOutputParam = new SmsOutputParam(smsOutput._id, smsOutput.Phone, smsOutput.Text);
-            var smsOutputLog = new SMSOutputLog.XSend(IpAddress.Text, smsOutputParam);
-        
+            var (status, json, error) = StatusSMSOutput.Connect(IpAddress.Text, CommandSend.SmsOutput, smsOutputParam.Json());
+            List<sms_output> smsOutputDb = db.sms_output.ToList();
+            ListViewSmsOutput.ItemsSource = smsOutputDb;
+
         }
 
         private void ListViewSmsOutput_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ListViewSmsOutput.SelectedItem is sms_output smsOutput)
             {
-                var smsStatus = new SMSOutputLog.XStatus(IpAddress.Text, smsOutput._id);
+                var (status, json, error) = StatusSMSOutput.Connect(IpAddress.Text, CommandSend.SmsOutputStatus, smsOutput._id.ToString());
+                var sms = db.sms_output.Find(smsOutput._id);
+                sms.Sent = status.Status.Sent.Result;
+                sms.Sent_time = status.Status.Sent.Time;
+                sms.Delivery = status.Status.Delivery.Result;
+                sms.Delivery_time = status.Status.Delivery.Time;
+                db.SaveChanges();
+                List<sms_output> smsOutputDb = db.sms_output.ToList();
+                ListViewSmsOutput.ItemsSource = smsOutputDb;
+
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            timer.Start();
+        }
+
+        private void ListViewContact_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ListViewContact.SelectedItem is contact contact)
+            {
+                var str = contact.Phone;
+                var charsToRemove = new string[] { " ", "-", "(", ")" };
+                foreach (var c in charsToRemove)
+                {
+                    str = str.Replace(c, String.Empty);
+                }
+                TextBoxPhone.Text = str;
+                SMSNew.IsSelected = true;
             }
         }
     }
