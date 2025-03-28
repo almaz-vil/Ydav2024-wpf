@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ydav2024_wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="337.5" Width="831.25" FontSize="20">
+        Title="Ydav2024-wpf v.1.1.0" Height="337.5" Width="831.25" FontSize="20" Closed="Window_Closed">
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
@@ -32,7 +32,7 @@
                         <Button Content="Соединиться" Click="Button_Click"/>
                     </DockPanel>
                     <StackPanel Background="Green">
-                        <TextBlock Text="Новая СИМ" Background="ForestGreen" Visibility="{Binding VisibilitySMS}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Новая СМС" Background="ForestGreen" Visibility="{Binding VisibilitySMS}" HorizontalAlignment="Center"/>
                         <TextBlock Text="Новый звонок" Background="ForestGreen" Visibility="{Binding VisibilityPHONE}" HorizontalAlignment="Center"/>
                     </StackPanel>
                     <DockPanel>
@@ -50,6 +50,11 @@
                         <TextBlock ToolTip="Качество принятых опорных (референсных) сигналов"  Text="{Binding StringFormat=RSRQ: {0}dB, Path=Info.Signal.Rsrq}" Margin="4,0,0,0" />
                         <TextBlock ToolTip="Мощность принимаемого опорного сигнала"  Text="{Binding StringFormat=RSRP: {0}dBm, Path=Info.Signal.Rsrp}" Margin="4,0,0,0" />
                     </DockPanel>
+
+                    <StackPanel x:Name="Politic">
+                        <TextBlock>Продолжая использовать программу Вы соглашаетесь с </TextBlock>
+                        <Button Content="Политикой конфиденциальности" Click="Button_Click_1"/>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Входящий звонок">

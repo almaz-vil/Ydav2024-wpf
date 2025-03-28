@@ -8,11 +8,11 @@ using System.Windows;
 // набор атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
 [assembly: AssemblyTitle("Ydav2024-wpf")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Клиент для Ydav2024 for Android")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("https://ydav-android.p-k-53.ru")]
 [assembly: AssemblyProduct("Ydav2024-wpf")]
-[assembly: AssemblyCopyright("Copyright ©  2025")]
+[assembly: AssemblyCopyright("Поляков Дмитрий Владимирович ©  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

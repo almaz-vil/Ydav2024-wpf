@@ -1,0 +1,25 @@
+﻿<Window x:Class="Ydav2024_wpf.WindowPolitic"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ydav2024_wpf"
+        mc:Ignorable="d"
+        Title="Политикой конфиденциальности" FontSize="14" Height="450" Width="800">
+    <Grid>
+        <!-- Устанавливаем  строки -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <!-- Устанавливаем столбца -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Grid.Row="0" Content="Ознакомлен" Click="Button_Click" />
+        <ScrollViewer Grid.Row="1" Grid.Column="0" CanContentScroll="True">
+
+            <WebBrowser x:Name="Web"></WebBrowser>
+        </ScrollViewer>
+        </Grid>
+</Window>

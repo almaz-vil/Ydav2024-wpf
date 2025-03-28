@@ -46,12 +46,28 @@ namespace Ydav2024_wpf
             List<sms_output> smsOutputDb = db.sms_output.ToList();
             ListViewSmsOutput.ItemsSource = smsOutputDb;
 
+            var conf = db.config.FirstOrDefault(p => p.Name == "ip");
+            if (conf != null)
+            {
+                IpAddress.Text = conf.Value;
+            }
+            var politic = db.config.FirstOrDefault(p => p.Name == "politic");
+            if (politic != null)
+            {
+                if (politic.Value == "1")
+                {
+                    Politic.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    Politic.Visibility = Visibility.Visible;
+                }
+            }
             //  установка таймера
 
             timer = new DispatcherTimer();
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = new TimeSpan(0, 0, 1);
-            timer.Start();
         }
 
         void timer_Tick(object sender, EventArgs e)
@@ -362,6 +378,24 @@ namespace Ydav2024_wpf
                 TextBoxPhone.Text = str;
                 SMSNew.IsSelected = true;
             }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            var conf = db.config.FirstOrDefault(p => p.Name == "ip");
+            if (conf != null)
+            {
+                conf.Value=IpAddress.Text;
+                db.SaveChanges();
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            WindowPolitic windowPolitic = new WindowPolitic();
+            windowPolitic.Owner = this;
+            windowPolitic.Show();
+            Politic.Visibility = Visibility.Collapsed;
         }
     }
 }

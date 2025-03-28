@@ -13,7 +13,7 @@ namespace Ydav2024_wpf
         public DbSet<phone_input> phone_input { get; set; }
         public DbSet<sms_input> sms_input { get; set; }
         public DbSet<sms_output> sms_output { get; set; }
-
+        public DbSet<config> config { get; set; }
         public ApplicationContext() : base("DefaultConnection") { }
     }
 }

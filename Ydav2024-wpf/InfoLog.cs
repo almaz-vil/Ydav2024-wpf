@@ -68,7 +68,7 @@ namespace Ydav2024_wpf
         {
             Info = null;
             Json = null;
-            Error = null;
+            Error = "Введите IP сервера и соединитесь!";
         }
         public Phones Info { get; set; }
         public string Json { get; set; }
@@ -105,7 +105,7 @@ namespace Ydav2024_wpf
                 }
                 else
                 {
-                    return "Visible";
+                    return "Collapsed";
                 }
 
             }
@@ -127,7 +127,7 @@ namespace Ydav2024_wpf
                 }
                 else
                 {
-                    return "Visible";
+                    return "Collapsed";
                 }
 
             }

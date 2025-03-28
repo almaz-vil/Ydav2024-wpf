@@ -33,7 +33,7 @@
     <TargetCulture>ru-RU</TargetCulture>
     <ProductName>Ydav2024-wpf</ProductName>
     <PublisherName>Поляков Дмитрий Владимирович</PublisherName>
-    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -95,6 +95,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Ydav2024_wpf.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -164,11 +167,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AndroidConnect.cs" />
+    <Compile Include="Config_db.cs" />
     <Compile Include="SMSInputDelete.cs" />
     <Compile Include="SMSInputLog.cs" />
     <Compile Include="SmsInput_db.cs" />
     <Compile Include="SMSOutputLog.cs" />
     <Compile Include="SmsOutput_db.cs" />
+    <Compile Include="WindowPolitic.xaml.cs">
+      <DependentUpon>WindowPolitic.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -186,6 +193,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="WindowPolitic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PhoneDelete.cs" />
@@ -239,6 +250,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="politic.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
