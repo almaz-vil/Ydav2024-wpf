@@ -25,12 +25,12 @@
             </StatusBarItem>
         </StatusBar>
         <TabControl>
-            <TabItem Header="Сигнал и батарейка" Foreground="White"  Background="Black">
-                <StackPanel Background="Black">
-                    <DockPanel Visibility="{Binding VisibilityConnect}">
-                        <TextBox  Name="IpAddress">192.168.1.91</TextBox>
-                        <Button Content="Соединиться" Click="Button_Click"/>
-                    </DockPanel>
+            <TabItem Header="Сигнал и батарейка" >
+                <StackPanel Background="Black" TextElement.Foreground="White">
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding VisibilityConnect}">
+                        <TextBox  Name="IpAddress" Margin="4">192.168.1.91</TextBox>
+                        <Button Content="Соединиться" Margin="4" Click="Button_Click"/>
+                    </StackPanel>
                     <StackPanel Background="Green">
                         <TextBlock Text="Новая СМС" Background="ForestGreen" Visibility="{Binding VisibilitySMS}" HorizontalAlignment="Center"/>
                         <TextBlock Text="Новый звонок" Background="ForestGreen" Visibility="{Binding VisibilityPHONE}" HorizontalAlignment="Center"/>
@@ -51,7 +51,7 @@
                         <TextBlock ToolTip="Мощность принимаемого опорного сигнала"  Text="{Binding StringFormat=RSRP: {0}dBm, Path=Info.Signal.Rsrp}" Margin="4,0,0,0" />
                     </DockPanel>
 
-                    <StackPanel x:Name="Politic">
+                    <StackPanel x:Name="Politic" Orientation="Horizontal" TextElement.FontSize="12" VerticalAlignment="Bottom" >
                         <TextBlock>Продолжая использовать программу Вы соглашаетесь с </TextBlock>
                         <Button Content="Политикой конфиденциальности" Click="Button_Click_1"/>
                     </StackPanel>
@@ -179,10 +179,14 @@
                     <TextBlock TextWrapping="Wrap" Name="Log" Text="{Binding Path=Json}"/>
                 </ScrollViewer>
             </TabItem>
-            <StackPanel Height="100" Width="100" VerticalAlignment="Bottom"/>
-            
+            <TabItem Header="?">
+                <StackPanel>
+                    <TextBlock TextWrapping="Wrap">
+                        Программа клиент Ydav-WPF для сервера Ydav2024 for Android версия: 1.1.0
+                    </TextBlock>
+                    <TextBox Text="https://ydav-android.p-k-53.ru"/>
+                </StackPanel>
+            </TabItem>          
         </TabControl>
     </DockPanel>
-
-
 </Window>
