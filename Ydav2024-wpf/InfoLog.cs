@@ -13,12 +13,8 @@ namespace Ydav2024_wpf
     [Serializable]
     public class Signal
     {
-        [JsonPropertyName("rsrp")]
-        public long Rsrp { get; set; }
-        [JsonPropertyName("rsrq")]
-        public long Rsrq { get; set; }
-        [JsonPropertyName("rssi")]
-        public long Rssi { get; set; }
+        [JsonPropertyName("signal_param")]
+        public string SignalParam { get; set; }
         [JsonPropertyName("network_type")]
         public string NetworkType { get; set; }
         [JsonPropertyName("sim_county_iso")]

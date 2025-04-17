@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ydav2024_wpf"
         mc:Ignorable="d"
-        Title="Ydav2024-wpf v.1.1.0" Height="337.5" Width="831.25" FontSize="20" Closed="Window_Closed">
+        Title="Ydav2024-wpf v.1.2.0" Height="337.5" Width="831.25" FontSize="20" Closed="Window_Closed">
     <DockPanel>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
@@ -27,34 +27,32 @@
         <TabControl>
             <TabItem Header="Сигнал и батарейка" >
                 <StackPanel Background="Black" TextElement.Foreground="White">
-                    <StackPanel Orientation="Horizontal" Visibility="{Binding VisibilityConnect}">
-                        <TextBox  Name="IpAddress" Margin="4">192.168.1.91</TextBox>
+                    <WrapPanel Orientation="Horizontal" Visibility="{Binding VisibilityConnect}">
+                        <TextBox Width="140" Name="IpAddress" Margin="4">192.168.1.91</TextBox>
                         <Button Content="Соединиться" Margin="4" Click="Button_Click"/>
-                    </StackPanel>
+                    </WrapPanel>
                     <StackPanel Background="Green">
                         <TextBlock Text="Новая СМС" Background="ForestGreen" Visibility="{Binding VisibilitySMS}" HorizontalAlignment="Center"/>
                         <TextBlock Text="Новый звонок" Background="ForestGreen" Visibility="{Binding VisibilityPHONE}" HorizontalAlignment="Center"/>
                     </StackPanel>
-                    <DockPanel>
+                    <WrapPanel>
                         <TextBlock ToolTip="Источник зарядки" Text="{Binding Path=Info.Battery.Charge}" />
                         <TextBlock ToolTip="Текущий заряд батареи"  Text="{Binding StringFormat={}{0}%, Path=Info.Battery.Level}" Margin="4,0,0,0" />
                         <TextBlock ToolTip="Температура" Text="{Binding StringFormat={}{0}C°, Path=Info.Battery.Temperature}" Margin="4,0,0,0" />
-                        <TextBlock ToolTip="Статус" Text="{Binding Path=Info.Battery.Status}" Margin="4,0,0,0" />
-                    </DockPanel>
-                    <DockPanel>
+                        <TextBlock ToolTip="Статус" TextWrapping="Wrap" Text="{Binding Path=Info.Battery.Status}" Margin="4,0,0,0" />
+                    </WrapPanel>
+                    <WrapPanel>
                         <TextBlock ToolTip="Имя СИМ" Text="{Binding Path=Info.Signal.SimOperatorName}" />
                         <TextBlock ToolTip="СИМ"  Text="{Binding Path=Info.Signal.SimOperator}" Margin="4,0,0,0" />
                         <TextBlock ToolTip="Код страны"  Text="{Binding Path=Info.Signal.SimCountyIso}" Margin="4,0,0,0" />
                         <TextBlock ToolTip="Тип связи"  Text="{Binding Path=Info.Signal.NetworkType}" Margin="4,0,0,0" />
-                        <TextBlock ToolTip="Показатель уровня принимаемого сигнала"  Text="{Binding StringFormat=RSSI: {0}dBm, Path=Info.Signal.Rssi}" Margin="4,0,0,0" />
-                        <TextBlock ToolTip="Качество принятых опорных (референсных) сигналов"  Text="{Binding StringFormat=RSRQ: {0}dB, Path=Info.Signal.Rsrq}" Margin="4,0,0,0" />
-                        <TextBlock ToolTip="Мощность принимаемого опорного сигнала"  Text="{Binding StringFormat=RSRP: {0}dBm, Path=Info.Signal.Rsrp}" Margin="4,0,0,0" />
-                    </DockPanel>
+                        <TextBlock ToolTip="Показатели принимаемого сигнала"  Text="{Binding Path=Info.Signal.SignalParam}" Margin="4,0,0,0" />
+                    </WrapPanel>
 
-                    <StackPanel x:Name="Politic" Orientation="Horizontal" TextElement.FontSize="12" VerticalAlignment="Bottom" >
-                        <TextBlock>Продолжая использовать программу Вы соглашаетесь с </TextBlock>
+                    <WrapPanel x:Name="Politic" Orientation="Horizontal" TextElement.FontSize="12" VerticalAlignment="Bottom" >
+                        <TextBlock TextWrapping="Wrap">Продолжая использовать программу Вы соглашаетесь с </TextBlock>
                         <Button Content="Политикой конфиденциальности" Click="Button_Click_1"/>
-                    </StackPanel>
+                    </WrapPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Входящий звонок">
@@ -182,7 +180,7 @@
             <TabItem Header="?">
                 <StackPanel>
                     <TextBlock TextWrapping="Wrap">
-                        Программа клиент Ydav-WPF для сервера Ydav2024 for Android версия: 1.1.0
+                        Программа клиент Ydav-WPF для сервера Ydav2024 for Android версия: 1.2.0
                     </TextBlock>
                     <TextBox Text="https://ydav-android.p-k-53.ru"/>
                 </StackPanel>
